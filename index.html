@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>fkg club</title>
+	<script src="js/all.min.js"></script>
+	<script src="js/jquery-2.1.0.min.js"></script>
+	
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+</head>
+<script type="text/javascript">
+	// $('table').scrollTableBody();
+
+
+	var h1 = "http://localhost/fkg/fkgData/fkg.json";
+	$.ajax({ //口罩API
+		type:"POST",
+		url:h1, //php位址
+		error:function(){
+			alert("ERROR E2");
+		},
+		success:fkg_api
+	});
+	function fkg_api(data){
+		fkgJson = data; //api抓到的資料 放進 fkgJson
+	}
+
+	function btn_1(){ //Search
+		var IDindex = Number.parseInt(div1.searchBox)-1;
+		if(IDindex){
+			if(IDindex < 0 || IDindex > fkgJson.length) {
+				console.log("ID超過範圍");
+			}else{
+				if(div1.tbody1FKG.indexOf(IDindex) == -1) showFKG(IDindex);
+				else console.log(div1.tbody1FKG.indexOf(IDindex));
+			}
+		}else{ //如果不是ID
+			for(var fkg in fkgJson){
+				if(fkg.Name.indexOf(div1.searchBox) !== -1){
+
+				}
+			}
+			div1.searchBoxMsg = div1.searchBox;
+		}
+	}
+
+	function btn_2(){ //顯示全部
+		tbody1Empty();
+		var strHtml = ""; //放整理好好顯示的HTML
+		for (var i = 0; i < fkgJson.length; i++) {
+			strHtml += showFKG(i)
+		}
+	}
+	function test(){
+		if(fkgJson[1].Name.indexOf("ル")){
+			alert("111");
+		}
+	}
+	function btn_3(){ //清除全部
+		tbody1Empty();
+	}
+
+	function btn_4(){ //指定能力
+		tbody1Empty();
+
+		checkedSkillArr = div1.checkedSkill; //宣告儲存勾選技能的陣列
+		if(checkedSkillArr.length === 0) return; //如果都沒勾選就回傳結束
+
+		var strHtml = ""; //放整理好好顯示的HTML
+		for(let i = 0; i < fkgJson.length; i++){ //慮過符合條件的fkg
+			let conformSkillNum = 0; //符合技能的數量
+			for(let checkedSkill of checkedSkillArr){
+				if(fkgJson[i].Pdtail[checkedSkill] == undefined) break;
+				else conformSkillNum++;
+				if(conformSkillNum == checkedSkillArr.length){
+					strHtml+=showFKG(i);
+					
+				}
+			}
+		}
+	}
+	function tbody1Empty(){
+		$("#tbody1").empty();
+		div1.tbody1FKG = [];
+	}
+	function showFKG(id){
+		var fkgPassive = "";
+		for(let i = 0; i < fkgJson[id].Passive.length; i++){
+			fkgPassive += `${fkgJson[id].Passive[i]}<br/>`;
+		};
+		var prop = "";
+		switch(fkgJson[id].Property){
+			case '斬': propClo = "#EB0000"; break;
+			case '打': propClo = "#0061D8"; break;
+			case '突': propClo = "#D1B31C"; break;
+			case '魔': propClo = "#8700EB"; break;
+		}
+
+//fkgJson[id].Property
+		var aFKG = 
+		`<tr>
+		 	<td class="w35px">${fkgJson[id].ID}</td>
+		 	<td class="w110px"><img src="fkgData/fkg_files/${fkgJson[id].Img}" class=""></td>
+		 	<td style="width: 130px; font-size: 14px;">${fkgJson[id].Name}</td>
+		 	<td class="w50px" style="color: #FFFFFF; -webkit-text-stroke: 1px ${propClo};">${fkgJson[id].Property}</td>
+
+		 	<td style="width: 110px"><p style="color: #007CFF">${fkgJson[id].HP}</p><p style="color: #FF3A3A">${fkgJson[id].ATK}</p><p style="color: #00AE4E">${fkgJson[id].DEF}</p></td>
+
+		 	<td class="w50px">${fkgJson[id].Speed}</td>
+		 	<td class="w100px" style="font-size: 14px;">${fkgJson[id].Skill}</td>
+		 	<td class="font12px">${fkgPassive}</td>
+		 </tr>`
+		 // <td style="width: 110px"><p style="color: #007CFF">${fkgJson[id].HP}</p><p style="color: #FF3A3A">${fkgJson[id].ATK}</p><p style="color: #00AE4E">${fkgJson[id].DEF}</p></td>
+
+		 //<td class="w110px"><p class="color1">${fkgJson[id].HP}</p><p class="color2">${fkgJson[id].ATK}</p><p class="color3">${fkgJson[id].DEF}</p></td>
+		 $("#tbody1").append(aFKG);
+		 div1.tbody1FKG.push(id);
+		 // return aFKG;
+	}
+</script>
+<style>
+	.htmlHpx{
+		height: 950px;
+	}
+	.tableBodyScroll tbody {
+	  display: block;
+	  max-height: 850px;
+	  overflow-y: scroll;
+	}
+
+	.tableBodyScroll thead,
+	tbody tr {
+	  display: table;
+	  width: 100%;
+	  table-layout: fixed;
+	}
+
+	.color1{
+		color: #007CFF;
+	}
+	.color2{
+		color: #FF3A3A;
+	}
+	.color3{
+		color: #00AE4E;
+	}
+
+	.font12px{
+		font-size: 12px;
+	}
+	.w50px{
+		width: 50px;
+	}
+	.w40px{
+		width: 40px;
+	}
+	.w35px{
+		width: 35px;
+	}
+	.w60px{
+		width: 60px;
+	}
+	.w100px{
+		width: 100px;
+	}
+	.w110px{
+		width: 110px;
+	}
+</style>
+<body style="overflow-y:scroll;  overflow-x:hidden; ">
+	<div class="container my-5">					
+		<div class="row">
+			<div class="col-3 alert alert-primary pt-4 htmlHpx" role="alert" id="div1">
+				<div class="input-group mb-3">
+				  	<input type="text" class="form-control" placeholder="ID or Name" aria-label="fkg" aria-describedby="basic-addon1" maxlength="12" v-model="searchBox" value="" id="searchBox">
+				    <button type="button" class="ml-2 btn btn-primary" id="btn_1" onclick="btn_1()">Search</button>
+				</div>
+				<div style="font-size: 12px; color: #0F9122"><span>符合條件: <span id="searchBoxMsg">{{ tbody1FKG.length }}</span></span></div>
+				
+				<hr/>
+
+				<div style="color: #A547C8;">技能篩選:</div>
+				<div class="row" > 
+					<div class="col-7 p-0" id="selectBox">
+						<div class="form-check">
+						  <input class="form-check-input" type="checkbox" v-model="checkedSkill" value="74" id="skill_74">
+						  <label class="form-check-label" for="skill_74">反撃</label>
+						</div>
+						<div class="form-check">
+						  <input class="form-check-input" type="checkbox" v-model="checkedSkill" value="84" id="skill_84">
+						  <label class="form-check-label" for="skill_84">降攻</label>
+						</div>
+						<div class="form-check">
+						  <input class="form-check-input" type="checkbox" v-model="checkedSkill" value="67" id="skill_67">
+						  <label class="form-check-label" for="skill_67">防禦</label>
+						</div>
+						<div class="form-check">
+						  <input class="form-check-input" type="checkbox" v-model="checkedSkill" value="36" id="skill_36">
+						  <label class="form-check-label" for="skill_36">暴擊機率</label>
+						</div>
+						<div class="form-check">
+						  <input class="form-check-input" type="checkbox" v-model="checkedSkill" value="39" id="skill_39">
+						  <label class="form-check-label" for="skill_39">暴擊傷害</label>
+						</div>
+						<div class="form-check">
+						  <input class="form-check-input" type="checkbox" v-model="checkedSkill" value="89" id="skill_89">
+						  <label class="form-check-label" for="skill_89">敵人攻擊miss</label>
+						</div>
+						<div class="form-check">
+						  <input class="form-check-input" type="checkbox" v-model="checkedSkill" value="66" id="skill_66">
+						  <label class="form-check-label" for="skill_66">光GAUGE</label>
+						</div>
+						<div class="form-check">
+						  <input class="form-check-input" type="checkbox" v-model="checkedSkill" value="76" id="skill_76">
+						  <label class="form-check-label" for="skill_76">光炮傷害</label>
+						</div>
+						<div class="form-check">
+						  <input class="form-check-input" type="checkbox" v-model="checkedSkill" value="57" id="skill_57">
+						  <label class="form-check-label" for="skill_57">HP1/2</label>
+						</div>
+						<div class="form-check">
+						  <input class="form-check-input" type="checkbox" v-model="checkedSkill" value="45" id="skill_45">
+						  <label class="form-check-label" for="skill_45">再動</label>
+						</div>
+					</div>
+					<div class="col-5 p-0">
+
+						<button type="button" class="ml-2 btn btn-outline-primary mt-2" id="btn_2" onclick="btn_2()">顯示全部</button>
+						<button type="button" class="ml-2 btn btn-outline-primary mt-2" id="btn_3" onclick="btn_3()">清除全部</button>
+						<button type="button" class="ml-2 btn btn-outline-primary mt-2" id="btn_4" onclick="btn_4()">指定能力</button>			
+					</div>
+				</div>
+				<hr/>
+				<div class="row">
+					
+					<div class="form-check">
+						<label for="Set1">Set 1</label>
+					  	<input id="Set1">
+					  	<button type="button" class="ml-2 btn btn-primary btn-sm mt-2" id="btn_5">Set 1</button>
+					</div>
+					<br/>
+					<div class="form-check">
+						<label for="Set2">Set 2</label>
+					  	<input id="Set2">
+					  	<button type="button" class="ml-2 btn btn-primary btn-sm mt-2" id="btn_6">Set 2</button>
+					</div>
+					<br/>
+					<div class="form-check">
+						<label for="Set3">Set 3</label>
+					  	<input id="Set3">
+					  	<button type="button" class="ml-2 btn btn-primary btn-sm mt-2" id="btn_7">Set 3</button>
+					</div>
+				</div>
+
+			</div>
+			<div class="col-9 alert alert-dark    pt-4 htmlHpx p-1" role="alert" >
+
+				<table class="table tableBodyScroll table-striped">
+				  <thead>
+				    <tr class="text-center p-0">
+				      <th scope="col" style="width: 40px; ">ID</th>
+				      <th scope="col" style="width: 100px; ">Icon</th>
+				      <th scope="col" style="width: 130px"; >Flower Knight</th>
+				      <th scope="col" style="width: 40px"; >Prop</th>
+				      <th scope="col" style="width: 110px"><span style="color: #007CFF">HP</span>/<span style="color: #FF3A3A">ATK</span>/<span style="color: #00AE4E">DEF</span></th>
+				      <th scope="col" class="w50px">Speed</th>
+				      <th scope="col" style="width: 110px">Skill</th>
+				      <th scope="col">Passive</th>
+				    </tr>
+				</thead>
+					<tbody id="tbody1"></tbody>
+				</table>
+			</div>
+		</div>
+
+	</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+//-----------VUE-------------------------------
+
+var div1 = new Vue({
+  el: '#div1',
+  data: {
+  	searchBox: '',
+  	searchBoxMsg: '',
+  	tbody1FKG: [],
+
+    checkedSkill:[],
+  }
+})
+
+
+//---------------------------------------------
+</script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
+</body>
+</html>
