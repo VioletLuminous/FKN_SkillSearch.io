@@ -12,10 +12,11 @@
 	// $('table').scrollTableBody();
 
 
-	var h1 = "tcnr108b15.000webhostapp.com/fkg/fkgData/fkg.json";
+	var h1 = "http://tcnr108b15.000webhostapp.com/fkg/api/getJson.php";
 	$.ajax({ //口罩API
 		type:"POST",
 		url:h1, //php位址
+		dataType: "json",
 		error:function(){
 			alert("ERROR E2");
 		},
