@@ -12,7 +12,7 @@
 	// $('table').scrollTableBody();
 
 
-	var h1 = "http://localhost/fkg/fkgData/fkg.json";
+	var h1 = "tcnr108b15.000webhostapp.com/fkg/fkgData/fkg.json";
 	$.ajax({ //口罩API
 		type:"POST",
 		url:h1, //php位址
@@ -100,7 +100,7 @@
 		var aFKG = 
 		`<tr>
 		 	<td class="w35px">${fkgJson[id].ID}</td>
-		 	<td class="w110px"><img src="fkgData/fkg_files/${fkgJson[id].Img}" class=""></td>
+		 	<td class="w110px"><img src="http://tcnr108b15.000webhostapp.com/fkg/fkgData/fkg_files/${fkgJson[id].Img}" class=""></td>
 		 	<td style="width: 130px; font-size: 14px;">${fkgJson[id].Name}</td>
 		 	<td class="w50px" style="color: #FFFFFF; -webkit-text-stroke: 1px ${propClo};">${fkgJson[id].Property}</td>
 
