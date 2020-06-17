@@ -4,12 +4,13 @@
 	<meta charset="UTF-8">
 	<title>fkg club</title>
 	<script src="js/all.min.js"></script>
-	<script src="js/jquery-2.1.0.min.js"></script>
-	
+	<script src="js/jquery-3.5.1.min.js"></script>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
 </head>
 <script type="text/javascript">
 	// $('table').scrollTableBody();
+
+//http://tcnr108b15.000webhostapp.com/fkg/fkgData/fkg_files/
 
 
 	var h1 = "http://tcnr108b15.000webhostapp.com/fkg/api/getJson.php";
@@ -24,24 +25,26 @@
 	});
 	function fkg_api(data){
 		fkgJson = data; //api抓到的資料 放進 fkgJson
-	}
+	}	
+
+	
 
 	function btn_1(){ //Search
 		var IDindex = Number.parseInt(div1.searchBox)-1;
 		if(IDindex){
 			if(IDindex < 0 || IDindex > fkgJson.length) {
-				console.log("ID超過範圍");
+				div1.searchBoxMsg = "ID超過範圍";
 			}else{
 				if(div1.tbody1FKG.indexOf(IDindex) == -1) showFKG(IDindex);
-				else console.log(div1.tbody1FKG.indexOf(IDindex));
+				div1.searchBoxMsg = "No find";
 			}
 		}else{ //如果不是ID
-			for(var fkg in fkgJson){
-				if(fkg.Name.indexOf(div1.searchBox) !== -1){
-
+			for(var id in fkgJson){
+				if(fkgJson[id].Name.indexOf(div1.searchBox) !== -1){ //如果找到
+					showFKG(id);
 				}
 			}
-			div1.searchBoxMsg = div1.searchBox;
+			// div1.searchBoxMsg = div1.searchBox;
 		}
 	}
 
@@ -52,11 +55,7 @@
 			strHtml += showFKG(i)
 		}
 	}
-	function test(){
-		if(fkgJson[1].Name.indexOf("ル")){
-			alert("111");
-		}
-	}
+
 	function btn_3(){ //清除全部
 		tbody1Empty();
 	}
@@ -80,46 +79,147 @@
 			}
 		}
 	}
+
 	function tbody1Empty(){
 		$("#tbody1").empty();
 		div1.tbody1FKG = [];
 	}
-	function showFKG(id){
+	function showFKG(FKGi){
 		var fkgPassive = "";
-		for(let i = 0; i < fkgJson[id].Passive.length; i++){
-			fkgPassive += `${fkgJson[id].Passive[i]}<br/>`;
+
+		for(let i = 0; i < fkgJson[FKGi].Passive.length; i++){
+			fkgPassive += `${fkgJson[FKGi].Passive[i]}<br/>`;
 		};
 		var prop = "";
-		switch(fkgJson[id].Property){
+		var badgeCloor = "";
+		switch(fkgJson[FKGi].Property){
 			case '斬': propClo = "#EB0000"; break;
-			case '打': propClo = "#0061D8"; break;
-			case '突': propClo = "#D1B31C"; break;
-			case '魔': propClo = "#8700EB"; break;
+			case '打': propClo = "#2088F5"; break;
+			case '突': propClo = "#FFB800"; break;
+			case '魔': propClo = "#9720EF"; break;
 		}
 
-//fkgJson[id].Property
 		var aFKG = 
 		`<tr>
-		 	<td class="w35px">${fkgJson[id].ID}</td>
-		 	<td class="w110px"><img src="http://tcnr108b15.000webhostapp.com/fkg/fkgData/fkg_files/${fkgJson[id].Img}" class=""></td>
-		 	<td style="width: 130px; font-size: 14px;">${fkgJson[id].Name}</td>
-		 	<td class="w50px" style="color: #FFFFFF; -webkit-text-stroke: 1px ${propClo};">${fkgJson[id].Property}</td>
+		 	<td class="w40px" id="fkg${fkgJson[FKGi].ID}"><span class="badge badge-pill badge-info">${fkgJson[FKGi].ID}</span></td>
+		 	<td class="w110px"><img src="fkgData/fkg_files/${fkgJson[FKGi].Img}" class=""></td>
+		 	<td style="width: 115px; font-size: 14px;">${fkgJson[FKGi].Name}</td>
+			<td class="w60px"><b style="color: ${propClo};">${fkgJson[FKGi].Property}</b></td>
 
-		 	<td style="width: 110px"><p style="color: #007CFF">${fkgJson[id].HP}</p><p style="color: #FF3A3A">${fkgJson[id].ATK}</p><p style="color: #00AE4E">${fkgJson[id].DEF}</p></td>
+		 	<td style="width: 95px"><p style="color: #007CFF">${fkgJson[FKGi].HP}</p><p style="color: #FF3A3A">${fkgJson[FKGi].ATK}</p><p style="color: #00AE4E">${fkgJson[FKGi].DEF}</p></td>
 
-		 	<td class="w50px">${fkgJson[id].Speed}</td>
-		 	<td class="w100px" style="font-size: 14px;">${fkgJson[id].Skill}</td>
+		 	<td class="w50px">${fkgJson[FKGi].Speed}</td>
+		 	<td class="w100px" style="font-size: 14px;">${fkgJson[FKGi].Skill}</td>
 		 	<td class="font12px">${fkgPassive}</td>
 		 </tr>`
-		 // <td style="width: 110px"><p style="color: #007CFF">${fkgJson[id].HP}</p><p style="color: #FF3A3A">${fkgJson[id].ATK}</p><p style="color: #00AE4E">${fkgJson[id].DEF}</p></td>
 
-		 //<td class="w110px"><p class="color1">${fkgJson[id].HP}</p><p class="color2">${fkgJson[id].ATK}</p><p class="color3">${fkgJson[id].DEF}</p></td>
 		 $("#tbody1").append(aFKG);
-		 div1.tbody1FKG.push(id);
+		 div1.tbody1FKG.push(FKGi);
 		 // return aFKG;
 	}
+	function setParty(setNun){
+		tbody1Empty();
+
+		var fkgs = div1.setTeam[setNun].split(",");
+		for(var id of fkgs){
+			// console.log(id)
+			showFKG(id-1);
+		}
+	}
+
+	function checkEmail(){
+		if(div1.email != "") return true;
+		else {
+			div1.apiMsg = "請輸入Email";
+			return false;
+		}
+	}
+
+	function saveParty(){
+		if(checkEmail() == false) return 0; //如果沒輸入Email 就不執行
+
+
+		$.ajax({
+		    type:"POST",
+		    url:"http://tcnr108b15.000webhostapp.com/fkg/api/fkgTableApi.php", //php位址
+		    data: {sqlSelect: 'checkEmailCount', email: div1.email },
+		    error:function(){
+		        console.log("ERROR checkEmailCount");
+		    },
+		    success: apiF_checkEmailCount
+		});
+
+		
+		function apiF_checkEmailCount(data){
+			if(data == 0) { //沒資料 建立新資料
+				$.ajax({
+				    type:"POST",
+				    url:"http://tcnr108b15.000webhostapp.com/fkg/api/fkgTableApi.php", //php位址
+				    data: {sqlSelect: 'createData', email: div1.email, set1:div1.setTeam[0], set2:div1.setTeam[1], set3:div1.setTeam[2], set4:div1.setTeam[3] },
+				    success:apiF_createData,
+				    error:function(){
+				        console.log("ERROR apiF_createData");
+				    },
+				})
+				function apiF_createData(data){ 
+					div1.apiMsg = "以儲存";
+				}
+			}
+			else{ //有資料 更新資料
+			    $.ajax({
+				    type:"POST",
+				    url:"http://tcnr108b15.000webhostapp.com/fkg/api/fkgTableApi.php", //php位址
+				    data: {sqlSelect: 'updata', email: div1.email, set1:div1.setTeam[0], set2:div1.setTeam[1], set3:div1.setTeam[2], set4:div1.setTeam[3] },
+				    success:apiF_updata,
+				    error:function(){
+				        console.log("ERROR apiF_updata");
+				    },
+				})
+				function apiF_updata(data){
+					div1.apiMsg = "以更新";
+				}
+			}
+
+		}
+	}
+
+	function loadParty(){
+		if(checkEmail() == false) return 0; //如果沒輸入Email 就不執行
+
+		$.ajax({
+		    type:"GET",
+		    url:"http://tcnr108b15.000webhostapp.com/fkg/api/fkgTableApi.php", //php位址
+		    data: {sqlSelect: 'selectData', email: div1.email},
+		    dataType: "json",
+		    success: apiF_selectData,
+		    error:function(data){
+		        console.log(data.responseText);
+		    }
+		})
+		function apiF_selectData(data){
+			if(data == "0 results") {
+				div1.apiMsg = "沒有此Email, 請先儲存";
+				return;
+			}
+			else{
+				div1.apiMsg = "讀取成功!";
+			    div1.setTeam[0] = data.set1;
+			    div1.setTeam[1] = data.set2;
+			    div1.setTeam[2] = data.set3;
+			    div1.setTeam[3] = data.set4;
+			}
+
+		}
+	}
+	
 </script>
 <style>
+	@media screen and (max-width: 300px) {
+	    body {
+	        background-color:lightblue;
+	    }
+	}
+
 	.htmlHpx{
 		height: 950px;
 	}
@@ -167,11 +267,20 @@
 	.w110px{
 		width: 110px;
 	}
+	.container{
+		width: 1170px;
+		max-width: none !important;
+	}
+	@media screen and (max-width: 1400px) {
+		body{
+		width: 1400px;
+		}
+	}
 </style>
-<body style="overflow-y:scroll;  overflow-x:hidden; ">
-	<div class="container my-5">					
+<body>
+	<div class="container my-5" >					
 		<div class="row">
-			<div class="col-3 alert alert-primary pt-4 htmlHpx" role="alert" id="div1">
+			<div class="col-3 alert alert-secondary pt-4 htmlHpx" role="alert" id="div1">
 				<div class="input-group mb-3">
 				  	<input type="text" class="form-control" placeholder="ID or Name" aria-label="fkg" aria-describedby="basic-addon1" maxlength="12" v-model="searchBox" value="" id="searchBox">
 				    <button type="button" class="ml-2 btn btn-primary" id="btn_1" onclick="btn_1()">Search</button>
@@ -184,18 +293,6 @@
 				<div class="row" > 
 					<div class="col-7 p-0" id="selectBox">
 						<div class="form-check">
-						  <input class="form-check-input" type="checkbox" v-model="checkedSkill" value="74" id="skill_74">
-						  <label class="form-check-label" for="skill_74">反撃</label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="checkbox" v-model="checkedSkill" value="84" id="skill_84">
-						  <label class="form-check-label" for="skill_84">降攻</label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="checkbox" v-model="checkedSkill" value="67" id="skill_67">
-						  <label class="form-check-label" for="skill_67">防禦</label>
-						</div>
-						<div class="form-check">
 						  <input class="form-check-input" type="checkbox" v-model="checkedSkill" value="36" id="skill_36">
 						  <label class="form-check-label" for="skill_36">暴擊機率</label>
 						</div>
@@ -204,16 +301,36 @@
 						  <label class="form-check-label" for="skill_39">暴擊傷害</label>
 						</div>
 						<div class="form-check">
+						  <input class="form-check-input" type="checkbox" v-model="checkedSkill" value="76" id="skill_76">
+						  <label class="form-check-label" for="skill_76">機率迴避</label>
+						</div>
+						<div class="form-check">
 						  <input class="form-check-input" type="checkbox" v-model="checkedSkill" value="89" id="skill_89">
 						  <label class="form-check-label" for="skill_89">敵人攻擊miss</label>
 						</div>
 						<div class="form-check">
-						  <input class="form-check-input" type="checkbox" v-model="checkedSkill" value="66" id="skill_66">
-						  <label class="form-check-label" for="skill_66">光GAUGE</label>
+						  <input class="form-check-input" type="checkbox" v-model="checkedSkill" value="74" id="skill_74">
+						  <label class="form-check-label" for="skill_74">反撃</label>
 						</div>
 						<div class="form-check">
-						  <input class="form-check-input" type="checkbox" v-model="checkedSkill" value="76" id="skill_76">
-						  <label class="form-check-label" for="skill_76">光炮傷害</label>
+						  <input class="form-check-input" type="checkbox" v-model="checkedSkill" value="84" id="skill_84">
+						  <label class="form-check-label" for="skill_84">降攻</label>
+						</div>
+<!-- 						<div class="form-check">
+						  <input class="form-check-input" type="checkbox" v-model="checkedSkill" value="67" id="skill_67">
+						  <label class="form-check-label" for="skill_67">防禦上升(3人)</label>
+						</div> -->
+						<div class="form-check">
+						  <input class="form-check-input" type="checkbox" v-model="checkedSkill" value="66" id="skill_66">
+						  <label class="form-check-label" for="skill_66">防禦上升(5人)</label>
+						</div>
+						<div class="form-check">
+						  <input class="form-check-input" type="checkbox" v-model="checkedSkill" value="65" id="skill_65">
+						  <label class="form-check-label" for="skill_65">光炮傷害</label>
+						</div>
+						<div class="form-check">
+						  <input class="form-check-input" type="checkbox" v-model="checkedSkill" value="63" id="skill_63">
+						  <label class="form-check-label" for="skill_63">光GUAGE</label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="checkbox" v-model="checkedSkill" value="57" id="skill_57">
@@ -223,59 +340,80 @@
 						  <input class="form-check-input" type="checkbox" v-model="checkedSkill" value="45" id="skill_45">
 						  <label class="form-check-label" for="skill_45">再動</label>
 						</div>
+						<div class="form-check">
+						  <input class="form-check-input" type="checkbox" v-model="checkedSkill" value="00" id="skill_00">
+						  <label class="form-check-label" for="skill_00">技能+HP吸收</label>
+						</div>
+
 					</div>
 					<div class="col-5 p-0">
-
 						<button type="button" class="ml-2 btn btn-outline-primary mt-2" id="btn_2" onclick="btn_2()">顯示全部</button>
 						<button type="button" class="ml-2 btn btn-outline-primary mt-2" id="btn_3" onclick="btn_3()">清除全部</button>
-						<button type="button" class="ml-2 btn btn-outline-primary mt-2" id="btn_4" onclick="btn_4()">指定能力</button>			
+						<button type="button" class="ml-2 btn btn-outline-primary mt-2" id="btn_4" onclick="btn_4()">指定能力</button>		
 					</div>
 				</div>
 				<hr/>
 				<div class="row">
 					
 					<div class="form-check">
-						<label for="Set1">Set 1</label>
-					  	<input id="Set1">
-					  	<button type="button" class="ml-2 btn btn-primary btn-sm mt-2" id="btn_5">Set 1</button>
+						<label for="Set">Set 1</label>
+					  	<input id="Set1" v-model="setTeam[0]" maxlength="30">
+					  	<button type="button" class="ml-2 btn btn-primary btn-sm mt-2" id="btn_5" onclick="setParty(0)">Set 1</button>
 					</div>
 					<br/>
 					<div class="form-check">
 						<label for="Set2">Set 2</label>
-					  	<input id="Set2">
-					  	<button type="button" class="ml-2 btn btn-primary btn-sm mt-2" id="btn_6">Set 2</button>
+					  	<input id="Set2" v-model="setTeam[1]" maxlength="30">
+					  	<button type="button" class="ml-2 btn btn-primary btn-sm mt-2" id="btn_6" onclick="setParty(1)">Set 2</button>
 					</div>
 					<br/>
 					<div class="form-check">
 						<label for="Set3">Set 3</label>
-					  	<input id="Set3">
-					  	<button type="button" class="ml-2 btn btn-primary btn-sm mt-2" id="btn_7">Set 3</button>
+					  	<input id="Set3" v-model="setTeam[2]" maxlength="30">
+					  	<button type="button" class="ml-2 btn btn-primary btn-sm mt-2" id="btn_7" onclick="setParty(2)">Set 3</button>
 					</div>
+					<br/>
+					<div class="form-check">
+						<label for="Set4">Set 4</label>
+					  	<input id="Set4" v-model="setTeam[3]" maxlength="30">
+					  	<button type="button" class="ml-2 btn btn-primary btn-sm mt-2" id="btn_8" onclick="setParty(3)">Set 4</button>
+					</div>
+					<br/>
+					<div class="form-check">
+						<label for="Set">Email</label>
+					  	<input id="Set1" v-model="email" maxlength="40">
+					  	<button type="button" class="ml-2 btn btn-primary btn-sm mt-2" id="btn_10" onclick="saveParty()">儲存</button>
+					  	<button type="button" class="ml-2 btn btn-primary btn-sm mt-2" id="btn_11" onclick="loadParty()">讀取</button>
+					  	<span style="font-size: 12px; color: #0F9122" id="">{{ apiMsg }}</span>
+					</div>
+					
 				</div>
-
+			
+				
+				
 			</div>
-			<div class="col-9 alert alert-dark    pt-4 htmlHpx p-1" role="alert" >
+			<div class="col-9 alert alert-primary pt-4 htmlHpx p-1" role="alert" >
 
-				<table class="table tableBodyScroll table-striped">
-				  <thead>
-				    <tr class="text-center p-0">
-				      <th scope="col" style="width: 40px; ">ID</th>
-				      <th scope="col" style="width: 100px; ">Icon</th>
-				      <th scope="col" style="width: 130px"; >Flower Knight</th>
-				      <th scope="col" style="width: 40px"; >Prop</th>
-				      <th scope="col" style="width: 110px"><span style="color: #007CFF">HP</span>/<span style="color: #FF3A3A">ATK</span>/<span style="color: #00AE4E">DEF</span></th>
-				      <th scope="col" class="w50px">Speed</th>
-				      <th scope="col" style="width: 110px">Skill</th>
-				      <th scope="col">Passive</th>
-				    </tr>
-				</thead>
-					<tbody id="tbody1"></tbody>
+				<table class="table tableBodyScroll table-striped" id="table1">
+				  	<thead>
+					    <tr class="text-center p-0">
+					      <th scope="col" style="width: 40px; ">ID</th>
+					      <th scope="col" style="width: 100px; ">Icon</th>
+					      <th scope="col" style="width: 115px"; >FlowerKnight</th>
+					      <th scope="col" style="width: 45px"; >Prop</th>
+					      <th scope="col" style="width: 110px"><span style="color: #007CFF">HP</span>/<span style="color: #FF3A3A">ATK</span>/<span style="color: #00AE4E">DEF</span></th>
+					      <th scope="col" class="w50px">Speed</th>
+					      <th scope="col" style="width: 110px">Skill</th>
+					      <th scope="col">Passive</th>
+					    </tr>
+					</thead>
+					<tbody id="tbody1" class="tb1">
+					</tbody>
 				</table>
 			</div>
 		</div>
 
 	</div>
-
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script>
 //-----------VUE-------------------------------
@@ -286,15 +424,17 @@ var div1 = new Vue({
   	searchBox: '',
   	searchBoxMsg: '',
   	tbody1FKG: [],
-
     checkedSkill:[],
+    setTeam:["1,2,3,600,50"],
+    email: '',
+    apiMsg: '',
+
   }
 })
 
-
 //---------------------------------------------
 </script>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 
