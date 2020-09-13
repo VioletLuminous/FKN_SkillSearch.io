@@ -13,19 +13,19 @@
 //http://tcnr108b15.000webhostapp.com/fkg/fkgData/fkg_files/
 
 
-	var h1 = "http://tcnr108b15.000webhostapp.com/fkg/api/getJson.php";
-	$.ajax({ //口罩API
-		type:"POST",
-		url:h1, //php位址
-		dataType: "json",
-		error:function(){
-			alert("ERROR E2");
-		},
-		success:fkg_api
-	});
-	function fkg_api(data){
-		fkgJson = data; //api抓到的資料 放進 fkgJson
-	}	
+	// var h1 = "http://tcnr108b15.000webhostapp.com/fkg/api/getJson.php";
+	// $.ajax({ //口罩API
+	// 	type:"POST",
+	// 	url:h1, //php位址
+	// 	dataType: "json",
+	// 	error:function(){
+	// 		alert("ERROR E2");
+	// 	},
+	// 	success:fkg_api
+	// });
+	// function fkg_api(data){
+	// 	fkgJson = data; //api抓到的資料 放進 fkgJson
+	// }	
 
 	
 
@@ -305,8 +305,8 @@
 						  <label class="form-check-label" for="skill_76">機率迴避</label>
 						</div>
 						<div class="form-check">
-						  <input class="form-check-input" type="checkbox" v-model="checkedSkill" value="89" id="skill_89">
-						  <label class="form-check-label" for="skill_89">敵人攻擊miss</label>
+						  <input class="form-check-input" type="checkbox" v-model="checkedSkill" value="91" id="skill_91">
+						  <label class="form-check-label" for="skill_91">敵人攻擊miss</label>
 						</div>
 						<div class="form-check">
 						  <input class="form-check-input" type="checkbox" v-model="checkedSkill" value="74" id="skill_74">
@@ -315,6 +315,10 @@
 						<div class="form-check">
 						  <input class="form-check-input" type="checkbox" v-model="checkedSkill" value="84" id="skill_84">
 						  <label class="form-check-label" for="skill_84">降攻</label>
+						</div>
+						<div class="form-check">
+						  <input class="form-check-input" type="checkbox" v-model="checkedSkill" value="89" id="skill_89">
+						  <label class="form-check-label" for="skill_89">敵人降發動率</label>
 						</div>
 <!-- 						<div class="form-check">
 						  <input class="form-check-input" type="checkbox" v-model="checkedSkill" value="67" id="skill_67">
@@ -355,40 +359,34 @@
 				<hr/>
 				<div class="row">
 					
-					<div class="form-check">
-						<label for="Set">Set 1</label>
-					  	<input id="Set1" v-model="setTeam[0]" maxlength="30">
-					  	<button type="button" class="ml-2 btn btn-primary btn-sm mt-2" id="btn_5" onclick="setParty(0)">Set 1</button>
+					<div class="form-check pl-0">
+						<label for="Set1"><button type="button" class="ml-2 btn btn-primary btn-sm" id="btn_5" onclick="setParty(0)">Set 1</button></label>
+					  	<input id="Set1" v-model="setTeam[0]" maxlength="30" autocomplete="off">
 					</div>
 					<br/>
-					<div class="form-check">
-						<label for="Set2">Set 2</label>
-					  	<input id="Set2" v-model="setTeam[1]" maxlength="30">
-					  	<button type="button" class="ml-2 btn btn-primary btn-sm mt-2" id="btn_6" onclick="setParty(1)">Set 2</button>
+					<div class="form-check pl-0">
+						<label for="Set2"><button type="button" class="ml-2 btn btn-primary btn-sm" id="btn_6" onclick="setParty(1)">Set 2</button></label>
+					  	<input id="Set2" v-model="setTeam[1]" maxlength="30" autocomplete="off">
 					</div>
 					<br/>
-					<div class="form-check">
-						<label for="Set3">Set 3</label>
-					  	<input id="Set3" v-model="setTeam[2]" maxlength="30">
-					  	<button type="button" class="ml-2 btn btn-primary btn-sm mt-2" id="btn_7" onclick="setParty(2)">Set 3</button>
+					<div class="form-check pl-0">
+						<label for="Set3"><button type="button" class="ml-2 btn btn-primary btn-sm" id="btn_7" onclick="setParty(2)">Set 3</button></label>
+					  	<input id="Set3" v-model="setTeam[2]" maxlength="30" autocomplete="off">
 					</div>
 					<br/>
-					<div class="form-check">
-						<label for="Set4">Set 4</label>
-					  	<input id="Set4" v-model="setTeam[3]" maxlength="30">
-					  	<button type="button" class="ml-2 btn btn-primary btn-sm mt-2" id="btn_8" onclick="setParty(3)">Set 4</button>
+					<div class="form-check pl-0">
+						<label for="Set4"><button type="button" class="ml-2 btn btn-primary btn-sm" id="btn_8" onclick="setParty(3)">Set 4</button></label>
+					  	<input id="Set4" v-model="setTeam[3]" maxlength="30" autocomplete="off">
 					</div>
-					<br/>
-					<div class="form-check">
-						<label for="Set">Email</label>
-					  	<input id="Set1" v-model="email" maxlength="40">
-					  	<button type="button" class="ml-2 btn btn-primary btn-sm mt-2" id="btn_10" onclick="saveParty()">儲存</button>
-					  	<button type="button" class="ml-2 btn btn-primary btn-sm mt-2" id="btn_11" onclick="loadParty()">讀取</button>
-					  	<span style="font-size: 12px; color: #0F9122" id="">{{ apiMsg }}</span>
-					</div>
-					
 				</div>
-			
+				<hr/>
+				<div class="form-check pl-0">
+					<label for="Set">Email</label>
+				  	<input id="Set1" v-model="email" maxlength="40">
+				  	<button type="button" class="ml-2 btn btn-primary btn-sm mt-2" id="btn_10" onclick="saveParty()">儲存</button>
+				  	<button type="button" class="ml-2 btn btn-primary btn-sm mt-2" id="btn_11" onclick="loadParty()">讀取</button>
+				  	<span style="font-size: 12px; color: #0F9122" id="">{{ apiMsg }}</span>
+				</div>
 				
 				
 			</div>
